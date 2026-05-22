@@ -5,6 +5,7 @@
 - iPhone 6.5-inch screenshots for the current App Store Connect slot: `AppStoreAssets/Screenshots/iPhone-6.5`.
 - iPhone 6.9-inch backup screenshots: `AppStoreAssets/Screenshots/iPhone-6.9`.
 - iPad 13-inch screenshots: `AppStoreAssets/Screenshots/iPad-13`.
+- Pro Monthly subscription review screenshot: `AppStoreAssets/Review/ProMonthlyReview.png`.
 - Bundle ID: `com.damagescopeai.app`.
 - SKU: `DAMAGESCOPEAI-IOS-001`.
 - Subscription product IDs:
