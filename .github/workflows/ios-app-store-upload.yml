@@ -92,9 +92,11 @@ jobs:
           fi
 
           archive_path="${RUNNER_TEMP}/DamageScopeAI.xcarchive"
+          archive_log="${RUNNER_TEMP}/xcodebuild-archive.log"
           echo "ARCHIVE_PATH=${archive_path}" >> "${GITHUB_ENV}"
           echo "Using build number ${build_number}"
 
+          set +e
           xcodebuild \
             -project "${PROJECT_PATH}" \
             -scheme "${SCHEME}" \
@@ -112,7 +114,25 @@ jobs:
             -authenticationKeyPath "${ASC_KEY_PATH}" \
             -authenticationKeyID "${APP_STORE_CONNECT_API_KEY_ID}" \
             -authenticationKeyIssuerID "${APP_STORE_CONNECT_API_ISSUER_ID}" \
-            clean archive | tee "${RUNNER_TEMP}/xcodebuild-archive.log"
+            clean archive 2>&1 | tee "${archive_log}"
+          archive_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${archive_status}" -ne 0 ]; then
+            echo "::group::Swift and Xcode diagnostics"
+            grep -nE "error:|warning:|:[0-9]+:[0-9]+:" "${archive_log}" | tail -n 240 || true
+            echo "::endgroup::"
+            exit "${archive_status}"
+          fi
+
+      - name: Upload archive diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DamageScopeAI-Archive-Diagnostics-${{ github.run_number }}
+          path: ${{ runner.temp }}/xcodebuild-archive.log
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Create export options
         run: |
