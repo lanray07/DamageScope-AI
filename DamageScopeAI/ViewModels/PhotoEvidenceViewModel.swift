@@ -1,6 +1,5 @@
 import Foundation
 import Observation
-import PhotosUI
 import SwiftData
 import UIKit
 
@@ -22,13 +21,12 @@ final class PhotoEvidenceViewModel {
         selectedCaseID = caseID
     }
 
-    func loadTransferable(from item: PhotosPickerItem?) async {
-        guard let item else { return }
+    func loadPhotoData(using loader: () async throws -> Data?) async {
         isLoading = true
         defer { isLoading = false }
 
         do {
-            if let data = try await item.loadTransferable(type: Data.self) {
+            if let data = try await loader() {
                 photoData = data
             } else {
                 errorMessage = "The selected image could not be loaded."
