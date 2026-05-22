@@ -29,7 +29,8 @@ The subscriptions carry the paid pricing. If App Store Connect requires a paid-a
 - Version: `1.0`
 - Copyright: `2026 lanray07`
 - App Store icon: `AppStoreAssets/AppIcon/DamageScopeAI-AppIcon-1024.png`
-- iPhone screenshots: `AppStoreAssets/Screenshots/iPhone-6.9`
+- iPhone screenshots for current App Store Connect 6.5-inch slot: `AppStoreAssets/Screenshots/iPhone-6.5`
+- iPhone 6.9-inch backup screenshots: `AppStoreAssets/Screenshots/iPhone-6.9`
 - iPad screenshots: `AppStoreAssets/Screenshots/iPad-13`
 
 ### Promotional Text

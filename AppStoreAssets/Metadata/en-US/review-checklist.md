@@ -2,7 +2,8 @@
 
 - App icon is included in the Xcode asset catalog: `DamageScopeAI/Resources/Assets.xcassets/AppIcon.appiconset`.
 - App Store marketing icon: `AppStoreAssets/AppIcon/DamageScopeAI-AppIcon-1024.png`.
-- iPhone 6.9-inch screenshots: `AppStoreAssets/Screenshots/iPhone-6.9`.
+- iPhone 6.5-inch screenshots for the current App Store Connect slot: `AppStoreAssets/Screenshots/iPhone-6.5`.
+- iPhone 6.9-inch backup screenshots: `AppStoreAssets/Screenshots/iPhone-6.9`.
 - iPad 13-inch screenshots: `AppStoreAssets/Screenshots/iPad-13`.
 - Bundle ID: `com.damagescopeai.app`.
 - SKU: `DAMAGESCOPEAI-IOS-001`.
