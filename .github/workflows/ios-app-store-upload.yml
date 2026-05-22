@@ -45,6 +45,24 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Select Xcode 26
+        run: |
+          set -euo pipefail
+          for xcode_path in \
+            /Applications/Xcode_26.3.app \
+            /Applications/Xcode_26.2.app \
+            /Applications/Xcode_26.1.1.app \
+            /Applications/Xcode_26.0.1.app; do
+            if [ -d "${xcode_path}" ]; then
+              echo "DEVELOPER_DIR=${xcode_path}/Contents/Developer" >> "${GITHUB_ENV}"
+              "${xcode_path}/Contents/Developer/usr/bin/xcodebuild" -version
+              exit 0
+            fi
+          done
+
+          echo "::error::Xcode 26 is required for App Store upload, but no Xcode 26 installation was found."
+          exit 1
+
       - name: Show Xcode version
         run: |
           xcodebuild -version
