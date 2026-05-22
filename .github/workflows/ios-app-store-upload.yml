@@ -1,9 +1,6 @@
 name: iOS App Store Upload
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       upload:
@@ -216,7 +213,7 @@ jobs:
           retention-days: 14
 
       - name: Upload to App Store Connect
-        if: ${{ github.event_name == 'push' || inputs.upload }}
+        if: ${{ inputs.upload }}
         run: |
           set -euo pipefail
           xcrun altool \
