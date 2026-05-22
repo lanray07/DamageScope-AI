@@ -24,7 +24,7 @@ env:
   PROJECT_PATH: DamageScopeAI.xcodeproj
   SCHEME: DamageScopeAI
   CONFIGURATION: Release
-  BUNDLE_IDENTIFIER: com.damagescopeai.app
+  BUNDLE_IDENTIFIER: damagescopeai.app
 
 jobs:
   archive-and-upload:

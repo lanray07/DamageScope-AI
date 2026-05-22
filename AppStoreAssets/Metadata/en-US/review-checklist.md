@@ -6,7 +6,7 @@
 - iPhone 6.9-inch backup screenshots: `AppStoreAssets/Screenshots/iPhone-6.9`.
 - iPad 13-inch screenshots: `AppStoreAssets/Screenshots/iPad-13`.
 - Pro Monthly subscription review screenshot: `AppStoreAssets/Review/ProMonthlyReview.png`.
-- Bundle ID: `com.damagescopeai.app`.
+- Bundle ID: `damagescopeai.app`.
 - SKU: `DAMAGESCOPEAI-IOS-001`.
 - Subscription product IDs:
   - `com.damagescopeai.pro.monthly`

@@ -6,7 +6,7 @@ Use these values for the App Store Connect record for DamageScope AI.
 
 - Name: `DamageScope AI`
 - Subtitle: `AI damage reports`
-- Bundle ID: `com.damagescopeai.app`
+- Bundle ID: `damagescopeai.app`
 - SKU: `DAMAGESCOPEAI-IOS-001`
 - Primary Language: `English`
 - Category: `Business`
@@ -158,7 +158,7 @@ DamageScope AI displays clear disclaimers that AI findings are visual suggestion
 Upload from Xcode on macOS:
 
 - Scheme: `DamageScopeAI`
-- Bundle ID: `com.damagescopeai.app`
+- Bundle ID: `damagescopeai.app`
 - Version: `1.0`
 - Build: `1`
 
