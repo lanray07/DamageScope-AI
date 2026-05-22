@@ -28,6 +28,8 @@
 	<string>DamageScope AI can save generated report assets when you choose to export or share them.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>DamageScope AI uses selected photos as evidence for your local damage cases.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchScreen</key>

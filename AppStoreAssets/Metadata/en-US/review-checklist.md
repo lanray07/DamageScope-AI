@@ -12,4 +12,5 @@
   - `com.damagescopeai.business.monthly`
 - Support URL: `https://github.com/lanray07/DamageScope-AI/blob/main/AppStoreAssets/Metadata/en-US/support.md`.
 - Privacy Policy URL: `https://github.com/lanray07/DamageScope-AI/blob/main/AppStoreAssets/Metadata/en-US/privacy-policy.md`.
+- Field-by-field App Store Connect values: `AppStoreAssets/Metadata/en-US/app-store-connect-form.md`.
 - Upload an archived build from Xcode/Transporter on macOS.
