@@ -27,7 +27,7 @@ After the upload completes, App Store Connect may take several minutes to proces
 
 - Uses the shared `DamageScopeAI` Xcode scheme.
 - Archives the Release build for generic iOS devices.
-- Uses automatic signing with `APPLE_TEAM_ID` and forces Apple Distribution signing for App Store archives.
+- Archives without development signing, then uses automatic App Store signing during export.
 - Exports an App Store Connect IPA.
 - Uploads the IPA with `xcrun altool` and the App Store Connect API key.
 - Stores the exported IPA and Xcode logs as short-lived workflow artifacts.
