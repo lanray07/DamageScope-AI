@@ -2,6 +2,8 @@ import Foundation
 
 enum AppConstants {
     static let backendEndpoint = URL(string: "https://YOUR_BACKEND_URL.com/damagescope-ai")!
+    static let privacyPolicyURL = URL(string: "https://github.com/lanray07/DamageScope-AI/blob/main/docs/PrivacyPolicy.md")!
+    static let termsOfUseURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
 
     static let proMonthlyProductID = "com.damagescopeai.pro.monthly"
     static let proYearlyProductID = "com.damagescopeai.pro.yearly"

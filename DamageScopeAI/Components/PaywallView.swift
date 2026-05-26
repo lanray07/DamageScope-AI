@@ -8,13 +8,7 @@ struct PaywallView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("DamageScope AI")
-                        .font(.largeTitle.bold())
-                    Text(subscriptionService.statusText)
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-                }
+                header
 
                 ForEach(PaywallPlan.all) { plan in
                     PaywallPlanCard(
@@ -28,21 +22,9 @@ struct PaywallView: View {
                     )
                 }
 
-                Button {
-                    Task { await subscriptionService.refreshEntitlements() }
-                } label: {
-                    Label("Restore Purchases", systemImage: "arrow.clockwise")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
-
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(AppConstants.disclaimers, id: \.self) { disclaimer in
-                        Label(disclaimer, systemImage: "checkmark.shield")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                restoreButton
+                SubscriptionLegalLinksView()
+                disclaimerList
             }
             .padding()
         }
@@ -59,6 +41,36 @@ struct PaywallView: View {
             Button("OK", role: .cancel) { }
         } message: {
             Text(subscriptionService.errorMessage ?? "")
+        }
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("DamageScope AI")
+                .font(.largeTitle.bold())
+            Text(subscriptionService.statusText)
+                .font(.headline)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var restoreButton: some View {
+        Button {
+            Task { await subscriptionService.refreshEntitlements() }
+        } label: {
+            Label("Restore Purchases", systemImage: "arrow.clockwise")
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.bordered)
+    }
+
+    private var disclaimerList: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(AppConstants.disclaimers, id: \.self) { disclaimer in
+                Label(disclaimer, systemImage: "checkmark.shield")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 
@@ -93,14 +105,18 @@ private struct PaywallPlan: Identifiable {
     var name: String
     var placeholderPrice: String
     var productID: String
+    var subscriptionLength: String
+    var billingUnit: String
     var features: [String]
 
     static let all = [
         PaywallPlan(
             plan: .free,
             name: "Free",
-            placeholderPrice: "£0",
+            placeholderPrice: "GBP 0",
             productID: "free",
+            subscriptionLength: "No paid subscription",
+            billingUnit: "free plan",
             features: [
                 "2 damage cases/month",
                 "10 photo scans/month",
@@ -111,8 +127,10 @@ private struct PaywallPlan: Identifiable {
         PaywallPlan(
             plan: .pro,
             name: "Pro Monthly",
-            placeholderPrice: "£24.99",
+            placeholderPrice: "GBP 24.99",
             productID: AppConstants.proMonthlyProductID,
+            subscriptionLength: "1 month",
+            billingUnit: "month",
             features: [
                 "Unlimited cases",
                 "250 AI scans/month",
@@ -124,8 +142,10 @@ private struct PaywallPlan: Identifiable {
         PaywallPlan(
             plan: .pro,
             name: "Pro Yearly",
-            placeholderPrice: "£199.99",
+            placeholderPrice: "GBP 199.99",
             productID: AppConstants.proYearlyProductID,
+            subscriptionLength: "1 year",
+            billingUnit: "year",
             features: [
                 "Annual Pro access",
                 "Professional PDF reports",
@@ -136,8 +156,10 @@ private struct PaywallPlan: Identifiable {
         PaywallPlan(
             plan: .business,
             name: "Business Monthly",
-            placeholderPrice: "£89.99",
+            placeholderPrice: "GBP 89.99",
             productID: AppConstants.businessMonthlyProductID,
+            subscriptionLength: "1 month",
+            billingUnit: "month",
             features: [
                 "Unlimited scans/reports",
                 "Advanced branding placeholder",
@@ -158,43 +180,100 @@ private struct PaywallPlanCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(plan.name)
-                        .font(.title3.bold())
-                    Text(product?.displayPrice ?? plan.placeholderPrice)
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                if isCurrent {
-                    Text("Current")
-                        .font(.caption.bold())
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 5)
-                        .background(Color.green.opacity(0.14))
-                        .clipShape(Capsule())
-                }
+            planHeader
+
+            if plan.plan != .free {
+                subscriptionDisclosure
             }
 
-            ForEach(plan.features, id: \.self) { feature in
-                Label(feature, systemImage: "checkmark")
-                    .font(.subheadline)
-            }
+            featureList
+            purchaseButton
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
 
-            Button {
-                action()
-            } label: {
-                if isPurchasing {
-                    ProgressView()
-                        .frame(maxWidth: .infinity)
-                } else {
-                    Text(plan.plan == .free ? "Included" : "Choose \(plan.name)")
-                        .frame(maxWidth: .infinity)
+    private var displayPrice: String {
+        product?.displayPrice ?? plan.placeholderPrice
+    }
+
+    private var planHeader: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(plan.name)
+                    .font(.title3.bold())
+                Text(displayPrice)
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            if isCurrent {
+                Text("Current")
+                    .font(.caption.bold())
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 5)
+                    .background(Color.green.opacity(0.14))
+                    .clipShape(Capsule())
+            }
+        }
+    }
+
+    private var subscriptionDisclosure: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label("Auto-renewable subscription", systemImage: "arrow.triangle.2.circlepath")
+            Label("Length: \(plan.subscriptionLength)", systemImage: "calendar")
+            Label("Price: \(displayPrice) per \(plan.billingUnit)", systemImage: "tag")
+            Label("Renews automatically until cancelled in your App Store account settings.", systemImage: "creditcard")
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
+    }
+
+    private var featureList: some View {
+        ForEach(plan.features, id: \.self) { feature in
+            Label(feature, systemImage: "checkmark")
+                .font(.subheadline)
+        }
+    }
+
+    private var purchaseButton: some View {
+        Button {
+            action()
+        } label: {
+            if isPurchasing {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+            } else {
+                Text(plan.plan == .free ? "Included" : "Choose \(plan.name)")
+                    .frame(maxWidth: .infinity)
+            }
+        }
+        .buttonStyle(.borderedProminent)
+        .disabled(isCurrent || plan.plan == .free || isPurchasing)
+    }
+}
+
+private struct SubscriptionLegalLinksView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Subscription terms")
+                .font(.headline)
+
+            Text("Purchases are charged to your Apple ID and renew automatically unless cancelled at least 24 hours before the end of the current period.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 16) {
+                Link(destination: AppConstants.privacyPolicyURL) {
+                    Label("Privacy Policy", systemImage: "lock.shield")
+                }
+
+                Link(destination: AppConstants.termsOfUseURL) {
+                    Label("Terms of Use (EULA)", systemImage: "doc.text")
                 }
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(isCurrent || plan.plan == .free || isPurchasing)
+            .font(.caption.weight(.semibold))
         }
         .padding()
         .background(Color(.secondarySystemBackground))
